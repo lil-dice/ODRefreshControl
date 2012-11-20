@@ -436,7 +436,15 @@ static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
         } completion:nil];
         
         self.refreshing = YES;
+        
         _canRefresh = NO;
+        
+        
+        if(self.titleView != nil)
+        {
+            self.titleView.hidden = YES;
+        }
+        
         [self sendActionsForControlEvents:UIControlEventValueChanged];
     }
     
