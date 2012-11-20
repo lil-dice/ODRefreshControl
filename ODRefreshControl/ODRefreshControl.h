@@ -29,6 +29,8 @@
 @property (nonatomic, strong) UIColor *tintColor;
 @property (nonatomic, assign) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
 @property (nonatomic, strong) UIColor *activityIndicatorViewColor; // iOS5 or more
+@property (strong, nonatomic) UIView* titleView;
+@property (nonatomic,strong) NSString* titleText;
 
 - (id)initInScrollView:(UIScrollView *)scrollView;
 

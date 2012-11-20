@@ -18,8 +18,6 @@
 #define kMaxTopRadius       16
 #define kMinBottomRadius    3
 #define kMaxBottomRadius    16
-#define kMinBottomPadding   4
-#define kMaxBottomPadding   6
 #define kMinArrowSize       2
 #define kMaxArrowSize       3
 #define kMinArrowRadius     5
@@ -31,7 +29,8 @@
 @property (nonatomic, readwrite) BOOL refreshing;
 @property (nonatomic, assign) UIScrollView *scrollView;
 @property (nonatomic, assign) UIEdgeInsets originalContentInset;
-
+@property (nonatomic, assign) NSInteger maxBottomPadding;
+@property (nonatomic, assign) NSInteger minBottomPadding;
 @end
 
 @implementation ODRefreshControl
@@ -41,6 +40,13 @@
 
 @synthesize scrollView = _scrollView;
 @synthesize originalContentInset = _originalContentInset;
+
+@synthesize maxBottomPadding = _maxBottomPadding;
+@synthesize minBottomPadding = _minBottomPadding;
+
+@synthesize titleText = _titleText;
+@synthesize titleView = _titleView;
+
 
 static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
 {
@@ -100,6 +106,9 @@ static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
         _highlightLayer = [CAShapeLayer layer];
         _highlightLayer.fillColor = [[[UIColor whiteColor] colorWithAlphaComponent:0.2] CGColor];
         [_shapeLayer addSublayer:_highlightLayer];
+        //padding values when no title text
+        self.minBottomPadding = 4;
+        self.maxBottomPadding = 6;
     }
     return self;
 }
