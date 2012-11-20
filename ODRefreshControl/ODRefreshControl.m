@@ -53,6 +53,20 @@ static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
     return a + (b - a) * p;
 }
 
+- (id)initInScrollView:(UIScrollView *)scrollView withTitle:(NSString*) theTitleText
+{
+    self.titleText = theTitleText;
+    
+    return [self initInScrollView:scrollView];
+}
+
+- (id)initInScrollView:(UIScrollView *)scrollView withTitle:(NSString*) theTitleText activityIndicatorView:(UIView *)activity
+{
+    self.titleText = theTitleText;
+    
+    return [self initInScrollView:scrollView activityIndicatorView:activity];
+}
+
 - (id)initInScrollView:(UIScrollView *)scrollView {
     return [self initInScrollView:scrollView activityIndicatorView:nil];
 }

@@ -34,6 +34,12 @@
 
 - (id)initInScrollView:(UIScrollView *)scrollView;
 
+// use title text underneath blob
+- (id)initInScrollView:(UIScrollView *)scrollView withTitle:(NSString*) theTitleText;
+
+// use custom activity indicator and title text
+- (id)initInScrollView:(UIScrollView *)scrollView withTitle:(NSString*) theTitleText activityIndicatorView:(UIView *)activity;
+
 // use custom activity indicator
 - (id)initInScrollView:(UIScrollView *)scrollView activityIndicatorView:(UIView *)activity;
 
