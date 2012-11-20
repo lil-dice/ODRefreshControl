@@ -120,9 +120,34 @@ static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
         _highlightLayer = [CAShapeLayer layer];
         _highlightLayer.fillColor = [[[UIColor whiteColor] colorWithAlphaComponent:0.2] CGColor];
         [_shapeLayer addSublayer:_highlightLayer];
+        
         //padding values when no title text
         self.minBottomPadding = 4;
         self.maxBottomPadding = 6;
+        
+        if(self.titleText != nil) //set title text
+        {
+            
+            self.minBottomPadding = 25;
+            self.maxBottomPadding = 25;
+            
+            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, kTotalViewHeight - self.maxBottomPadding + 10, self.scrollView.frame.size.width, 14)];
+            
+            titleLabel.backgroundColor = [UIColor clearColor];
+            titleLabel.textColor = [UIColor darkGrayColor];
+            titleLabel.numberOfLines = 1;
+            titleLabel.text = self.titleText;
+            titleLabel.font = [UIFont systemFontOfSize:14];
+            titleLabel.shadowColor = [UIColor whiteColor];
+            titleLabel.shadowOffset = CGSizeMake(0,1.0);
+            titleLabel.textAlignment = UITextAlignmentCenter;
+            
+            self.titleView = titleLabel;
+            
+            [self addSubview:self.titleView];
+            
+        }
+        
     }
     return self;
 }
@@ -199,7 +224,7 @@ static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
     if (!self.enabled || _ignoreOffset) {
         return;
     }
-
+    
     CGFloat offset = [[change objectForKey:@"new"] CGPointValue].y + self.originalContentInset.top;
     
     if (_refreshing) {
@@ -210,9 +235,9 @@ static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
             [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
             _shapeLayer.position = CGPointMake(0, kMaxDistance + offset + kOpenedViewHeight);
             [CATransaction commit];
-
+            
             _activity.center = CGPointMake(floor(self.frame.size.width / 2), MIN(offset + self.frame.size.height + floor(kOpenedViewHeight / 2), self.frame.size.height - kOpenedViewHeight/ 2));
-
+            
             _ignoreInset = YES;
             _ignoreOffset = YES;
             
@@ -287,14 +312,14 @@ static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
     CGMutablePathRef path = CGPathCreateMutable();
     
     //Calculate some useful points and values
-    CGFloat verticalShift = MAX(0, -((kMaxTopRadius + kMaxBottomRadius + kMaxTopPadding + kMaxBottomPadding) + offset));
+    CGFloat verticalShift = MAX(0, -((kMaxTopRadius + kMaxBottomRadius + kMaxTopPadding + self.maxBottomPadding) + offset));
     CGFloat distance = MIN(kMaxDistance, fabs(verticalShift));
     CGFloat percentage = 1 - (distance / kMaxDistance);
     
     CGFloat currentTopPadding = lerp(kMinTopPadding, kMaxTopPadding, percentage);
     CGFloat currentTopRadius = lerp(kMinTopRadius, kMaxTopRadius, percentage);
     CGFloat currentBottomRadius = lerp(kMinBottomRadius, kMaxBottomRadius, percentage);
-    CGFloat currentBottomPadding =  lerp(kMinBottomPadding, kMaxBottomPadding, percentage);
+    CGFloat currentBottomPadding =  lerp(self.minBottomPadding, self.maxBottomPadding, percentage);
     
     CGPoint bottomOrigin = CGPointMake(floor(self.bounds.size.width / 2), self.bounds.size.height - currentBottomPadding -currentBottomRadius);
     CGPoint topOrigin = CGPointZero;
@@ -421,6 +446,9 @@ static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
 - (void)beginRefreshing
 {
     if (!_refreshing) {
+        if(self.titleView != nil)
+            self.titleView.hidden = YES;
+        
         CABasicAnimation *alphaAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
         alphaAnimation.duration = 0.0001;
         alphaAnimation.toValue = [NSNumber numberWithFloat:0];
@@ -432,13 +460,13 @@ static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
         
         _activity.alpha = 1;
         _activity.layer.transform = CATransform3DMakeScale(1, 1, 1);
-
+        
         CGPoint offset = self.scrollView.contentOffset;
         _ignoreInset = YES;
         [self.scrollView setContentInset:UIEdgeInsetsMake(kOpenedViewHeight + self.originalContentInset.top, self.originalContentInset.left, self.originalContentInset.bottom, self.originalContentInset.right)];
         _ignoreInset = NO;
         [self.scrollView setContentOffset:offset animated:NO];
-
+        
         self.refreshing = YES;
         _canRefresh = NO;
     }
@@ -473,6 +501,10 @@ static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
             _ignoreInset = YES;
             [blockScrollView setContentInset:self.originalContentInset];
             _ignoreInset = NO;
+            if(self.titleView != nil)
+            {
+                self.titleView.hidden = NO;
+            }
         }];
     }
 }
