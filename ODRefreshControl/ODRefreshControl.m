@@ -152,6 +152,18 @@ static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
     return self;
 }
 
+- (void) setTitleText:(NSString *)titleText
+{
+    _titleText = titleText;
+    
+    if(self.titleView != nil)
+    {
+        UILabel* titleLabel = (UILabel*)self.titleView;
+        titleLabel.text = titleText;
+    }
+    
+}
+
 - (void)dealloc
 {
     [self.scrollView removeObserver:self forKeyPath:@"contentOffset"];
